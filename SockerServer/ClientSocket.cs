@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -32,11 +33,12 @@ namespace SockerServerTCP
             NetworkStream networkStream = null;
             try
             {
+                _iPEndPoint = ((IPEndPoint)_tcpClient.Client.RemoteEndPoint);
+                Console.WriteLine($"Client {_iPEndPoint.Address} connect");
                 var greeating = "Hi user, enter a number for get the sum all entered number \r\n";
                 buffer = Encoding.UTF8.GetBytes(greeating);
                 networkStream = _tcpClient.GetStream();
                 networkStream.Write(buffer, 0, buffer.Length);
-                _iPEndPoint = ((IPEndPoint)_tcpClient.Client.RemoteEndPoint);
 
                 var receive = string.Empty;
                 while (true)
@@ -53,6 +55,10 @@ namespace SockerServerTCP
                     buffer = Encoding.UTF8.GetBytes(receive);
                     networkStream.Write(buffer, 0, buffer.Length);
                 }
+
+            }
+            catch (IOException)
+            {
 
             }
             catch (Exception ex)
@@ -81,6 +87,7 @@ namespace SockerServerTCP
         private void RemoveClient(IPEndPoint iPEndPoint)
         {
             _connectionDic.TryRemove(iPEndPoint, out _);
+            Console.WriteLine($"Client {iPEndPoint.Address} disconect");
         }
     }
 }
