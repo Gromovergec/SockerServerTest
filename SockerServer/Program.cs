@@ -9,9 +9,8 @@ namespace SockerServerTCP
         {
             SocketServer sockSrv;
             var port = 0;
-            if (args.Length != 0)
+            if (args.Length != 0 && int.TryParse(args.FirstOrDefault(), out port))
             {
-                int.TryParse(args.FirstOrDefault(), out port);
                 sockSrv = new SocketServer(port);
             } else
             {
